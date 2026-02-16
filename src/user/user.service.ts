@@ -1,11 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from './dto/user-response.dto';
+const saltRounds = 10;
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const exists = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (exists) {
+      throw new ConflictException('Este email já existe.');
+    }
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltRounds,
+    );
+
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    
+    try{
+      const savedUser = await this.userRepository.save(newUser)
+
+      return plainToInstance(
+        UserResponseDto, 
+        savedUser,
+        { excludeExtraneousValues: true}
+      )
+    } catch (error) {
+
+      throw new InternalServerErrorException(
+        'Erro interno ao processar solicitação.',
+      );
+    }
   }
 
   findAll() {
