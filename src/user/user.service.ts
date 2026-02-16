@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -32,17 +36,14 @@ export class UserService {
       ...createUserDto,
       password: hashedPassword,
     });
-    
-    try{
-      const savedUser = await this.userRepository.save(newUser)
 
-      return plainToInstance(
-        UserResponseDto, 
-        savedUser,
-        { excludeExtraneousValues: true}
-      )
-    } catch (error) {
+    try {
+      const savedUser = await this.userRepository.save(newUser);
 
+      return plainToInstance(UserResponseDto, savedUser, {
+        excludeExtraneousValues: true,
+      });
+    } catch {
       throw new InternalServerErrorException(
         'Erro interno ao processar solicitação.',
       );
