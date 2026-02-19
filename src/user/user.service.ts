@@ -65,4 +65,16 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email })
+      .getOne();
+  }
+
+  async comparePassword(plain: string, hashed: string): Promise<boolean> {
+    return bcrypt.compare(plain, hashed);
+  }
 }
