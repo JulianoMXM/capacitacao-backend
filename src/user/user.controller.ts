@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   UseGuards,
   Request,
@@ -36,26 +35,24 @@ export class UserController {
   @Patch('me')
   updateInfo(
     @Request() req: RequestWithUser,
-    @Body() updateUserDto: UpdateUserDto
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    
-    if(Object.keys(updateUserDto).length === 0){
-      throw new BadRequestException('Nenhum dado para atualizar.')
+    if (Object.keys(updateUserDto).length === 0) {
+      throw new BadRequestException('Nenhum dado para atualizar.');
     }
-    return this.userService.updateInfo(updateUserDto, req.user.id)
+    return this.userService.updateInfo(updateUserDto, req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/password')
   updatePassword(
     @Request() req: RequestWithUser,
-    @Body() updatePasswordDto: UpdatePasswordDto
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-
-    if(Object.keys(updatePasswordDto).length === 0){
-      throw new BadRequestException('Nenhum dado para atualizar.')
+    if (Object.keys(updatePasswordDto).length === 0) {
+      throw new BadRequestException('Nenhum dado para atualizar.');
     }
-    return this.userService.updatePassword(updatePasswordDto, req.user.id)
+    return this.userService.updatePassword(updatePasswordDto, req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)

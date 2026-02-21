@@ -52,56 +52,60 @@ export class UserService {
     }
   }
 
-  async getInfo(id: string){
-    const user = await this.userRepository.findOne({where: { id } })
-    
-    if (!user){
-      throw new NotFoundException('Usuário não encontrado.')
+  async getInfo(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
     }
 
-    return user
+    return user;
   }
 
   async updateInfo(updateUserDto: UpdateUserDto, id: string) {
-    const user = await this.getInfo(id)
+    const user = await this.getInfo(id);
 
-    if(updateUserDto.email && updateUserDto.email !== user.email){
-      const emailExists = await this.userRepository.findOne({where: {email: updateUserDto.email}})
-      
-      if(emailExists){
-        throw new ConflictException('Este email está em uso.')
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
+      const emailExists = await this.userRepository.findOne({
+        where: { email: updateUserDto.email },
+      });
+
+      if (emailExists) {
+        throw new ConflictException('Este email está em uso.');
       }
-      
-      Object.assign(user, updateUserDto)
 
-      return this.userRepository.save(user)
+      Object.assign(user, updateUserDto);
+
+      return this.userRepository.save(user);
     }
-    
   }
 
   async updatePassword(updatePasswordDto: UpdatePasswordDto, id: string) {
-    const user = await this.findById(id)
+    const user = await this.findById(id);
 
-    if(!user){
-      throw new NotFoundException('Usuário não encontrado.')
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
     }
-    const newHashedPassword = await bcrypt.hash(updatePasswordDto.password!, saltRounds)
-    
-    user.password = newHashedPassword
-    await this.userRepository.save(user)
+    const newHashedPassword = await bcrypt.hash(
+      updatePasswordDto.password!,
+      saltRounds,
+    );
 
-    return {message: 'Senha atualizada com sucesso.'}
+    user.password = newHashedPassword;
+    await this.userRepository.save(user);
+
+    return { message: 'Senha atualizada com sucesso.' };
   }
 
   async deleteAccount(id: string) {
-    const user = await this.getInfo(id)
+    const user = await this.getInfo(id);
 
-    if(!user){
-      throw new NotFoundException('Usuário não encontrado.')
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
     }
-    await this.userRepository.delete(id)
+    await this.userRepository.delete(id);
 
-    return {message: 'Usuário deletado com sucesso.'}
+    return { message: 'Usuário deletado com sucesso.' };
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -114,10 +118,10 @@ export class UserService {
 
   async findById(id: string): Promise<User | null> {
     return this.userRepository
-    .createQueryBuilder('user')
-    .addSelect('user.password')
-    .where('user.id = :id', {id: +id})
-    .getOne()
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.id = :id', { id: +id })
+      .getOne();
   }
 
   async comparePassword(plain: string, hashed: string): Promise<boolean> {
