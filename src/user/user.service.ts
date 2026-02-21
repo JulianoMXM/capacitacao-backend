@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,6 +12,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/user-response.dto';
+import { UpdatePasswordDto } from './dto/update-user-password.dto';
 const saltRounds = 10;
 
 @Injectable()
@@ -50,20 +52,56 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async getInfo(id: string){
+    const user = await this.userRepository.findOne({where: { id } })
+    
+    if (!user){
+      throw new NotFoundException('Usuário não encontrado.')
+    }
+
+    return user
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async updateInfo(updateUserDto: UpdateUserDto, id: string) {
+    const user = await this.getInfo(id)
+
+    if(updateUserDto.email && updateUserDto.email !== user.email){
+      const emailExists = await this.userRepository.findOne({where: {email: updateUserDto.email}})
+      
+      if(emailExists){
+        throw new ConflictException('Este email está em uso.')
+      }
+      
+      Object.assign(user, updateUserDto)
+
+      return this.userRepository.save(user)
+    }
+    
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async updatePassword(updatePasswordDto: UpdatePasswordDto, id: string) {
+    const user = await this.findById(id)
+
+    if(!user){
+      throw new NotFoundException('Usuário não encontrado.')
+    }
+    const newHashedPassword = await bcrypt.hash(updatePasswordDto.password!, saltRounds)
+    
+    user.password = newHashedPassword
+    await this.userRepository.save(user)
+
+    return {message: 'Senha atualizada com sucesso.'}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async deleteAccount(id: string) {
+    const user = await this.getInfo(id)
+
+    if(!user){
+      throw new NotFoundException('Usuário não encontrado.')
+    }
+    await this.userRepository.delete(id)
+
+    return {message: 'Usuário deletado com sucesso.'}
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -72,6 +110,14 @@ export class UserService {
       .addSelect('user.password')
       .where('user.email = :email', { email })
       .getOne();
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return this.userRepository
+    .createQueryBuilder('user')
+    .addSelect('user.password')
+    .where('user.id = :id', {id: +id})
+    .getOne()
   }
 
   async comparePassword(plain: string, hashed: string): Promise<boolean> {
