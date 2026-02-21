@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
+import { UpdatePasswordDto } from './dto/update-user-password.dto';
+import type { RequestWithUser } from 'src/auth/types/request-with-user';
 
 @Controller('user')
 export class UserController {
@@ -24,25 +28,39 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  findAll() {
-    return this.userService.findAll();
+  getInfo(@Request() req: RequestWithUser) {
+    return this.userService.getInfo(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  updateInfo(
+    @Request() req: RequestWithUser,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    
+    if(Object.keys(updateUserDto).length === 0){
+      throw new BadRequestException('Nenhum dado para atualizar.')
+    }
+    return this.userService.updateInfo(updateUserDto, req.user.id)
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/password')
-  updatePassword(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  updatePassword(
+    @Request() req: RequestWithUser,
+    @Body() updatePasswordDto: UpdatePasswordDto
+  ) {
+
+    if(Object.keys(updatePasswordDto).length === 0){
+      throw new BadRequestException('Nenhum dado para atualizar.')
+    }
+    return this.userService.updatePassword(updatePasswordDto, req.user.id)
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('me')
-  delete(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  delete(@Request() req: RequestWithUser) {
+    return this.userService.deleteAccount(req.user.id);
   }
 }
