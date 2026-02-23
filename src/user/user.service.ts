@@ -64,7 +64,6 @@ export class UserService {
 
   async updateInfo(updateUserDto: UpdateUserDto, id: string) {
     const user = await this.getInfo(id);
-
     if (updateUserDto.email && updateUserDto.email !== user.email) {
       const emailExists = await this.userRepository.findOne({
         where: { email: updateUserDto.email },
@@ -73,11 +72,10 @@ export class UserService {
       if (emailExists) {
         throw new ConflictException('Este email está em uso.');
       }
-
-      Object.assign(user, updateUserDto);
-
-      return this.userRepository.save(user);
     }
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+    return user
   }
 
   async updatePassword(updatePasswordDto: UpdatePasswordDto, id: string) {
@@ -120,7 +118,7 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .addSelect('user.password')
-      .where('user.id = :id', { id: +id })
+      .where('user.id = :id', { id })
       .getOne();
   }
 
