@@ -75,7 +75,7 @@ export class UserService {
     }
     Object.assign(user, updateUserDto);
     await this.userRepository.save(user);
-    return user
+    return user;
   }
 
   async updatePassword(updatePasswordDto: UpdatePasswordDto, id: string) {
