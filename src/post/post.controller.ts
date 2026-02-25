@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -11,14 +22,17 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @Post('me')
-  create(@Body() createPostDto: CreatePostDto, @Request() req: RequestWithUser) {
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @Request() req: RequestWithUser,
+  ) {
     return this.postService.create(createPostDto, req.user.id);
   }
 
   @Get()
   getAll(
     @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10'
+    @Query('limit') limit: string = '10',
   ) {
     return this.postService.findAll(Number(page), Number(limit));
   }
@@ -28,9 +42,13 @@ export class PostController {
   getAllMe(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
-    @Request() req: RequestWithUser
+    @Request() req: RequestWithUser,
   ) {
-    return this.postService.findAllFromUser(req.user.id, Number(page), Number(limit));
+    return this.postService.findAllFromUser(
+      req.user.id,
+      Number(page),
+      Number(limit),
+    );
   }
 
   @Get(':slug')
@@ -40,26 +58,23 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me/:slug')
-  getOneMe(
-    @Param('slug') slug: string,
-    @Request() req: RequestWithUser) {
+  getOneMe(@Param('slug') slug: string, @Request() req: RequestWithUser) {
     return this.postService.findOneFromUser(req.user.id, slug);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/:id')
   update(
-    @Param('id') postId: string, 
+    @Param('id') postId: string,
     @Body() updatePostDto: UpdatePostDto,
-    @Request() req: RequestWithUser) {
+    @Request() req: RequestWithUser,
+  ) {
     return this.postService.update(req.user.id, postId, updatePostDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('me/:id')
-  remove(
-    @Param('id') id: string,
-    @Request() req: RequestWithUser) {
-    return this.postService.remove(req.user.id, id); 
+  remove(@Param('id') id: string, @Request() req: RequestWithUser) {
+    return this.postService.remove(req.user.id, id);
   }
 }
