@@ -1,9 +1,11 @@
+import { Comment } from 'src/comment/entities/comment.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,6 +27,11 @@ export class Post {
     onDelete: 'CASCADE',
   })
   author: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post, {
+    onDelete: 'CASCADE',
+  })
+  comments: Comment[];
 
   @CreateDateColumn()
   createdAt: Date;
