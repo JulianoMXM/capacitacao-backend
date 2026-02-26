@@ -1,0 +1,536 @@
+{
+  "info": {
+    "_postman_id": "60735f6d-8574-4358-beec-384a130b4a71",
+    "name": "Capacitacao Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49911267",
+    "_collection_link": "https://go.postman.co/collection/49911267-60735f6d-8574-4358-beec-384a130b4a71?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"testeRotasPost2@email.com\",\r\n    \"password\": \"1234abcd\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/login",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Criar User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"TesteRotasPost\",\r\n    \"email\": \"testeRotasPost2@email.com\",\r\n    \"password\": \"1234abcd\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/user",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pegar Dados do User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/user/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/user/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualiza Senha do User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\": \"novaSenha\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/user/me/password",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Apagar User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/user/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post",
+      "item": [
+        {
+          "name": "Ver todos os Post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/post",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Post específico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/post/[slug]",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "[slug]"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Teste Rota Post com autorização\",\r\n    \"content\": \"Testando se a rota de Post funciona com um texto de no mínimo 50 caracteres\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/post/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Posts do User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/post/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post específico do User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/post/me/teste-rota-post-para-pr-602457",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "me",
+                "teste-rota-post-para-pr-602457"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualiza um Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Mudando o título por exemplo - PR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/post/me/ef0a1adf-febc-4066-aa95-ef6e73919123",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "me",
+                "ef0a1adf-febc-4066-aa95-ef6e73919123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deleta um Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/post/me/ef0a1adf-febc-4066-aa95-ef6e73919123",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "post",
+                "me",
+                "ef0a1adf-febc-4066-aa95-ef6e73919123"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comment",
+      "item": [
+        {
+          "name": "Ver comentários de um post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/comment/me/ca80012b-83af-4a51-aa05-28ccfa8ee01f",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "comment",
+                "me",
+                "ca80012b-83af-4a51-aa05-28ccfa8ee01f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar comentário",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"Terceiro comentário!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/comment/me/ca80012b-83af-4a51-aa05-28ccfa8ee01f",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "comment",
+                "me",
+                "ca80012b-83af-4a51-aa05-28ccfa8ee01f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar um comentário",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/comment/me/",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "comment",
+                "me",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Apagar um comentário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/comment/me",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "comment",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "URL",
+      "value": ""
+    }
+  ]
+}
